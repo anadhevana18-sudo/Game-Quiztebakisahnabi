@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Kisah Para Nabi ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #FFEFBA 0%, #FFFFFF 100%); /* Warna pastel cerah */
+            padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #FF69B4; /* Pink ceria */
+            font-size: 3em;
+            text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            letter-spacing: 1.5px;
+            animation: bounceIn 1s ease-out;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            color: #4CAF50; /* Hijau segar */
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px; /* Jarak antar kartu lebih besar */
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+
+        /* 3D Flip Card Styling */
+        .card-wrapper {
+            width: 280px;
+            height: 220px;
+            perspective: 1000px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.2s ease-out; /* Animasi pop yang lebih cepat */
+        }
+
+        /* Efek Pop saat di-hover/klik */
+        .card-wrapper:hover {
+            transform: scale(1.08); /* Sedikit membesar saat di-hover */
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            /* Cubic bezier untuk efek flip memantul */
+            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+            transform-style: preserve-3d;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            border-radius: 20px; /* Pojok lebih membulat */
+        }
+
+        /* Kelas untuk membalik kartu saat diklik */
+        .card-wrapper.flipped .card-inner { 
+            transform: rotateY(180deg);
+        }
+
+        /* Bagian Depan dan Belakang Kartu */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 5px solid;
+        }
+
+        .card-front {
+            background: linear-gradient(145deg, #FFD700 0%, #FFB200 100%); /* Kuning-oranye cerah */
+            color: #8B4513;
+            border-color: #FFA07A;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-front .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #FFF;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .card-back {
+            background: linear-gradient(145deg, #87CEEB 0%, #ADD8E6 100%); /* Biru langit */
+            color: #36454F;
+            border-color: #6495ED;
+            transform: rotateY(180deg);
+            font-size: 1.1em;
+        }
+
+        .question-number {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            opacity: 0.9;
+            color: #A0522D;
+        }
+
+        .card-front p {
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .answer-result {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.6);
+        }
+
+        .true {
+            color: #28A745; /* Hijau cerah */
+        }
+
+        .false {
+            color: #DC3545; /* Merah cerah */
+        }
+
+        .explanation {
+            font-size: 0.9em;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* Keyframe Animations */
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+    <script>
+        // Fungsi untuk menambahkan class 'flipped' saat kartu diklik
+        function flipCard(element) {
+            element.classList.toggle('flipped');
+        }
+    </script>
+</head>
+<body>
+
+    <h1>✨ Quiz Kisah Para Nabi ✨</h1>
+    <h2>Yuk, main tebak-tebakan kisah seru para nabi\!<br>Klik kartunya untuk lihat jawabannya.</h2>
+    <h3> By:4rD </h3>
+
+    <div class="quiz-container">
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">👶</span>
+                    <div class="question-number">Soal 1/20</div>
+                    <p>Nabi Adam AS adalah manusia pertama yang diciptakan Allah SWT langsung dari tanah.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Ya, Nabi Adam AS diciptakan dari tanah liat dan merupakan manusia pertama.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">⚕️</span>
+                    <div class="question-number">Soal 2/20</div>
+                    <p>Mukjizat utama Nabi Musa AS adalah mampu menyembuhkan berbagai penyakit.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result false">SALAH 🚫</div>
+                    <p class="explanation">Mukjizat Nabi Musa AS adalah tongkat yang bisa jadi ular dan membelah laut, bukan menyembuhkan penyakit.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🔥</span>
+                    <div class="question-number">Soal 3/20</div>
+                    <p>Nabi Ibrahim AS pernah dibakar api tapi tidak hangus sama sekali.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Hebat\! Allah membuat api itu jadi dingin dan tidak melukai Nabi Ibrahim AS.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">⛵</span>
+                    <div class="question-number">Soal 4/20</div>
+                    <p>Nabi Nuh AS berdakwah hanya selama 100 tahun sebelum banjir besar melanda.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result false">SALAH 🚫</div>
+                    <p class="explanation">Wah, keliru. Nabi Nuh AS berdakwah sangat lama, sekitar 950 tahun lho.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">💭</span>
+                    <div class="question-number">Soal 5/20</div>
+                    <p>Nabi Yusuf AS memiliki kemampuan untuk menafsirkan mimpi.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Betul sekali\! Nabi Yusuf AS sangat pandai menafsirkan mimpi orang.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">👑</span>
+                    <div class="question-number">Soal 6/20</div>
+                    <p>Nabi Sulaiman AS diberi karunia bisa berbicara dengan hewan dan menguasai jin.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Tepat\! Allah memberinya mukjizat bisa mengerti bahasa hewan dan mengendalikan jin.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🤒</span>
+                    <div class="question-number">Soal 7/20</div>
+                    <p>Nabi Ayyub AS diuji dengan kehilangan kekayaan dan keluarga, tapi tidak pernah sakit.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result false">SALAH 🚫</div>
+                    <p class="explanation">Nabi Ayyub AS juga diuji dengan sakit kulit yang parah, tapi ia sangat sabar.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🐳</span>
+                    <div class="question-number">Soal 8/20</div>
+                    <p>Nabi Yunus AS ditelan ikan paus karena meninggalkan kaumnya tanpa izin Allah.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Betul sekali\! Beliau ditelan ikan besar, lalu berdoa dan bertaubat.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">👼</span>
+                    <div class="question-number">Soal 9/20</div>
+                    <p>Nabi Isa AS adalah satu-satunya nabi yang terlahir tanpa seorang ayah.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Tepat sekali\! Ini adalah salah satu mukjizat besar kelahiran Nabi Isa AS.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">⛰️</span>
+                    <div class="question-number">Soal 10/20</div>
+                    <p>Nabi Muhammad SAW menerima wahyu pertama kali di Gua Tsur.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result false">SALAH 🚫</div>
+                    <p class="explanation">Bukan di Gua Tsur, tapi di **Gua Hira** tempat Nabi Muhammad SAW menerima wahyu pertama kali.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🔨</span>
+                    <div class="question-number">Soal 11/20</div>
+                    <p>Nabi Idris AS dikenal sebagai nabi yang sangat pandai menjahit.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Ya, Nabi Idris AS adalah nabi pertama yang pandai menjahit dan menulis.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">💦</span>
+                    <div class="question-number">Soal 12/20</div>
+                    <p>Mukjizat Nabi Saleh AS adalah bisa membuat unta betina keluar dari celah batu.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Benar, unta betina itu adalah mukjizat Nabi Saleh untuk kaum Tsamud.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🌊</span>
+                    <div class="question-number">Soal 13/20</div>
+                    <p>Nabi Luth AS diutus untuk berdakwah kepada kaum yang suka berbuat kerusakan.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Tepat, Nabi Luth diutus kepada kaum Sodom yang melakukan perbuatan keji.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🐐</span>
+                    <div class="question-number">Soal 14/20</div>
+                    <p>Nabi Syu'aib AS diutus untuk kaum Madyan yang suka berbuat curang dalam timbangan.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Ya, beliau menasihati kaum Madyan yang suka mengurangi takaran dan timbangan.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🔪</span>
+                    <div class="question-number">Soal 15/20</div>
+                    <p>Nabi Ismail AS digantikan dengan seekor domba saat akan disembelih oleh ayahnya, Nabi Ibrahim.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Benar, peristiwa ini menjadi asal-usul dari perayaan Idul Adha.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🍎</span>
+                    <div class="question-number">Soal 16/20</div>
+                    <p>Nabi Adam dan Siti Hawa dikeluarkan dari surga karena makan buah Khuldi.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Tepat. Mereka melanggar larangan Allah SWT untuk memakan buah dari pohon tertentu.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🐝</span>
+                    <div class="question-number">Soal 17/20</div>
+                    <p>Nabi Yahya AS adalah putra dari Nabi Zakaria AS.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Ya, kelahiran Nabi Yahya AS adalah mukjizat bagi Nabi Zakaria AS yang sudah tua.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">👂</span>
+                    <div class="question-number">Soal 18/20</div>
+                    <p>Nabi Harun AS memiliki keahlian berbicara yang lebih baik daripada Nabi Musa AS.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Nabi Harun AS diangkat menjadi nabi untuk membantu Nabi Musa karena beliau fasih berbicara.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">🎤</span>
+                    <div class="question-number">Soal 19/20</div>
+                    <p>Nabi Daud AS memiliki mukjizat suara yang sangat indah dan mampu melunakkan besi.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result true">BENAR 🎉</div>
+                    <p class="explanation">Suara indah Nabi Daud AS jika membaca kitab Zabur, membuat gunung-gunung ikut bertasbih.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-wrapper" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="icon">📖</span>
+                    <div class="question-number">Soal 20/20</div>
+                    <p>Kitab suci Al-Qur'an diturunkan kepada Nabi Isa AS.</p>
+                </div>
+                <div class="card-back">
+                    <div class="answer-result false">SALAH 🚫</div>
+                    <p class="explanation">Al-Qur'an diturunkan kepada **Nabi Muhammad SAW**, sedangkan Nabi Isa AS menerima kitab Injil.</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
+
